@@ -1,0 +1,103 @@
+import { Card, CardContent, Grid, Stack, Typography } from '@mui/material'
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import React from 'react'
+import { theme } from '../theme/theme';
+import { Transaction } from '../types';
+import { financeCalculations } from '../utils/financeCalculations';
+import { formatCurrency } from '../utils/formatting';
+import useMonthlyTransactions from '../hooks/useMonthlyTransactions';
+
+// interface MonthlySummaryProps {
+//     monthlyTransactions: Transaction[]
+// }
+
+const MonthlySummary = (
+    // {monthlyTransactions}: MonthlySummaryProps
+    ) => {
+    const monthlyTransactions = useMonthlyTransactions();
+    const {income, expense, balance} = financeCalculations(monthlyTransactions);
+
+  return (
+    // containerを書くことで中の要素が横並びになる.spacingは余白の調整
+    <Grid container spacing={{xs: 1, sm: 2}} mb={2}>
+        {/* 収入 */}
+        <Grid item xs={4} display={"flex"} flexDirection={"column"}>
+            <Card sx={{bgcolor:(theme)=>theme.palette.incomeColor.main, color:"white", borderRadius:"10px", flexGrow: 1}}>
+                {/* xs:０ピクセル以上の時は8pxの余白がつく。sm:600px以上の時16pxの余白がつく */}
+                <CardContent sx={{padding: {xs: 1, sm: 2}}}>
+                    <Stack direction={"row"}>
+                        <ArrowUpwardIcon sx={{fontSize:"2rem"}}/>
+                        <Typography>収入</Typography>
+                    </Stack>
+                    <Typography 
+                        textAlign={"right"} 
+                        variant='h5' 
+                        fontWeight={"fontWeightBold"}
+                        // xs0以上、sm600以上、md900以上
+                        sx={{ 
+                            wordBreak: "break-word", 
+                            fontSize: {xs: ".8rem", sm: "1rem", md: "1.2rem"}
+                        }}
+                    >
+                        ¥{formatCurrency(income)}
+                    </Typography>
+                </CardContent>
+            </Card>
+        </Grid>
+
+        {/* 支出 */}
+        <Grid item xs={4} display={"flex"} flexDirection={"column"}>
+            <Card sx={{bgcolor:(theme)=>theme.palette.expenseColor.main, color:"white", borderRadius:"10px", flexGrow: 1}}>
+                {/* xs:０ピクセル以上の時は8pxの余白がつく。sm:600px以上の時16pxの余白がつく */}
+                <CardContent sx={{padding: {xs: 1, sm: 2}}}>
+                    <Stack direction={"row"}>
+                        <ArrowDownwardIcon sx={{fontSize:"2rem"}}/>
+                        <Typography>支出</Typography>
+                    </Stack>
+                    <Typography 
+                        textAlign={"right"} 
+                        variant='h5' 
+                        fontWeight={"fontWeightBold"}
+                        // xs0以上、sm600以上、md900以上
+                        sx={{ 
+                            wordBreak: "break-word", 
+                            fontSize: {xs: ".8rem", sm: "1rem", md: "1.2rem"}
+                        }}
+                    >
+                        ¥{formatCurrency(expense)}
+                    </Typography>
+                </CardContent>
+            </Card>
+        </Grid>
+
+        {/* 残高 */}
+        <Grid item xs={4} display={"flex"} flexDirection={"column"}>
+            <Card sx={{bgcolor:(theme)=>theme.palette.balanceColor.main, color:"white", borderRadius:"10px", flexGrow: 1}}>
+                {/* xs:０ピクセル以上の時は8pxの余白がつく。sm:600px以上の時16pxの余白がつく */}
+                <CardContent sx={{padding: {xs: 1, sm: 2}}}>
+                    <Stack direction={"row"}>
+                        <AccountBalanceIcon sx={{fontSize:"2rem"}}/>
+                        <Typography>残高</Typography>
+                    </Stack>
+                    <Typography 
+                        textAlign={"right"} 
+                        variant='h5' 
+                        fontWeight={"fontWeightBold"}
+                        // xs0以上、sm600以上、md900以上
+                        sx={{ 
+                            wordBreak: "break-word", 
+                            fontSize: {xs: ".8rem", sm: "1rem", md: "1.2rem"}
+                        }}
+                    >
+                        ¥{formatCurrency(balance)}
+                    </Typography>
+                </CardContent>
+            </Card>
+        </Grid>
+    </Grid>
+  )
+}
+
+export default MonthlySummary
